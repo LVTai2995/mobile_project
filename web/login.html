@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html class="light" lang="vi">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>WeatherTrip - Đăng nhập</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@0..1,opsz@24&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+    darkMode: "class",
+    theme: {
+        extend: {
+            colors: {
+                "primary": "#004ccd",
+                "primary-fixed": "#dbe1ff",
+                "primary-fixed-dim": "#b4c5ff",
+                "primary-container": "#0f62fe",
+                "on-primary": "#ffffff",
+                "on-primary-fixed": "#00174c",
+                "on-primary-fixed-variant": "#003da9",
+                "on-primary-container": "#f3f3ff",
+                "secondary": "#705d00",
+                "secondary-fixed": "#ffe170",
+                "secondary-fixed-dim": "#e9c400",
+                "secondary-container": "#fdd400",
+                "on-secondary": "#ffffff",
+                "on-secondary-fixed": "#221b00",
+                "on-secondary-fixed-variant": "#544600",
+                "on-secondary-container": "#6f5c00",
+                "tertiary": "#00625d",
+                "tertiary-fixed": "#6ff7ee",
+                "tertiary-fixed-dim": "#4edbd2",
+                "tertiary-container": "#007d77",
+                "on-tertiary": "#ffffff",
+                "on-tertiary-fixed": "#00201e",
+                "on-tertiary-fixed-variant": "#00504c",
+                "on-tertiary-container": "#c7fff9",
+                "error": "#ba1a1a",
+                "error-container": "#ffdad6",
+                "on-error": "#ffffff",
+                "on-error-container": "#93000a",
+                "background": "#f9f9ff",
+                "on-background": "#151c27",
+                "surface": "#f9f9ff",
+                "surface-bright": "#f9f9ff",
+                "surface-container": "#e7eefe",
+                "surface-container-high": "#e2e8f8",
+                "surface-container-highest": "#dce2f3",
+                "surface-container-low": "#f0f3ff",
+                "surface-container-lowest": "#ffffff",
+                "surface-dim": "#d3daea",
+                "surface-tint": "#0052dd",
+                "surface-variant": "#dce2f3",
+                "on-surface": "#151c27",
+                "on-surface-variant": "#424656",
+                "inverse-surface": "#2a313d",
+                "inverse-on-surface": "#ebf1ff",
+                "inverse-primary": "#b4c5ff",
+                "outline": "#737687",
+                "outline-variant": "#c3c6d8",
+            },
+            borderRadius: {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            spacing: {
+                "unit-sm": "8px",
+                "unit-md": "16px",
+                "gutter": "16px",
+                "unit-xl": "32px",
+                "unit-xs": "4px",
+                "unit-lg": "24px",
+                "margin-mobile": "20px"
+            },
+            fontFamily: {
+                "inter": ["Inter", "sans-serif"]
+            }
+        }
+    }
+}
+</script>
+<style>
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+body { font-family: 'Inter', sans-serif; }
+.glass-panel {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+}
+</style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- Header -->
+<header class="bg-surface/80 backdrop-blur-md sticky top-0 z-50 h-16 w-full flex items-center justify-between px-margin-mobile max-w-7xl mx-auto">
+    <div class="flex items-center gap-unit-sm">
+        <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1, 'wght' 400;">cloudy</span>
+        <h1 class="font-bold text-[24px] leading-[32px] text-primary tracking-[-0.02em]">WeatherTrip</h1>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="flex-grow flex items-center justify-center px-margin-mobile py-unit-xl">
+    <!-- Login Container -->
+    <div class="w-full max-w-md">
+        
+        <!-- Hero Image/Visual -->
+        <div class="relative w-full h-48 rounded-xl overflow-hidden mb-unit-xl shadow-lg">
+            <img alt="WeatherTrip Atmosphere" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=400&fit=crop&q=80">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+            <div class="absolute bottom-unit-md left-unit-md text-white">
+                <p class="font-bold text-[28px] leading-[36px] tracking-[-0.02em]">Chào mừng trở lại</p>
+                <p class="font-semibold text-[14px] leading-[20px] tracking-[0.01em] opacity-90">Lên kế hoạch cho hành trình tiếp theo của bạn</p>
+            </div>
+        </div>
+        
+        <!-- Login Form -->
+        <div class="bg-surface-container-lowest rounded-xl p-unit-lg shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-outline-variant/30">
+            <form id="loginForm" class="flex flex-col gap-unit-lg">
+                
+                <!-- Email Field -->
+                <div class="flex flex-col gap-unit-xs">
+                    <label class="font-semibold text-[14px] leading-[20px] tracking-[0.01em] text-on-surface-variant px-unit-xs" for="email">Email</label>
+                    <div class="relative group">
+                        <span class="material-symbols-outlined absolute left-unit-md top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors" style="font-variation-settings: 'FILL' 1, 'wght' 400;">mail</span>
+                        <input 
+                            aria-label="Địa chỉ email"
+                            class="w-full pl-12 pr-unit-md py-3 bg-surface-bright border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary transition-all outline-none text-[16px] leading-[24px]" 
+                            id="email" 
+                            placeholder="name@example.com" 
+                            required="" 
+                            type="email">
+                        <span class="hidden text-error font-medium text-[12px] leading-[16px] tracking-[0.02em] mt-1 px-unit-xs" id="email-error">Email không hợp lệ</span>
+                    </div>
+                </div>
+                
+                <!-- Password Field -->
+                <div class="flex flex-col gap-unit-xs">
+                    <div class="flex justify-between items-center px-unit-xs">
+                        <label class="font-semibold text-[14px] leading-[20px] tracking-[0.01em] text-on-surface-variant" for="password">Mật khẩu</label>
+                        <a class="font-medium text-[12px] leading-[16px] tracking-[0.02em] text-primary hover:underline" href="#">Quên mật khẩu?</a>
+                    </div>
+                    <div class="relative group">
+                        <span class="material-symbols-outlined absolute left-unit-md top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors" style="font-variation-settings: 'FILL' 1, 'wght' 400;">lock</span>
+                        <input 
+                            aria-label="Mật khẩu"
+                            class="w-full pl-12 pr-unit-md py-3 bg-surface-bright border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary transition-all outline-none text-[16px] leading-[24px]" 
+                            id="password" 
+                            placeholder="••••••••" 
+                            required="" 
+                            type="password">
+                        <button 
+                            aria-label="Hiển thị hoặc ẩn mật khẩu" 
+                            class="absolute right-unit-md top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors" 
+                            onclick="togglePassword()" 
+                            type="button">
+                            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1, 'wght' 400;" id="eye-icon">visibility</span>
+                        </button>
+                    </div>
+                    <span class="hidden text-error font-medium text-[12px] leading-[16px] tracking-[0.02em] mt-1 px-unit-xs" id="password-error">Mật khẩu không chính xác</span>
+                </div>
+                
+                <!-- Remember Me -->
+                <div class="flex items-center gap-unit-sm px-unit-xs mt-unit-xs">
+                    <input class="w-4 h-4 text-primary border-outline-variant rounded focus:ring-primary cursor-pointer" id="remember-me" type="checkbox">
+                    <label class="font-medium text-[12px] leading-[16px] tracking-[0.02em] text-on-surface-variant cursor-pointer" for="remember-me">Ghi nhớ đăng nhập</label>
+                </div>
+                
+                <!-- Login Button -->
+                <button 
+                    aria-label="Đăng nhập vào tài khoản" 
+                    class="w-full bg-primary text-on-primary py-4 rounded-lg font-semibold text-[14px] leading-[20px] tracking-[0.01em] font-bold shadow-lg hover:bg-[#003da9] active:scale-[0.98] transition-all flex justify-center items-center gap-unit-sm" 
+                    type="submit" 
+                    id="loginBtn">
+                    Đăng nhập
+                    <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1, 'wght' 400;">arrow_forward</span>
+                </button>
+                
+                <!-- Divider -->
+                <div class="flex items-center gap-unit-md py-unit-sm">
+                    <div class="flex-grow h-px bg-outline-variant"></div>
+                    <span class="font-medium text-[12px] leading-[16px] tracking-[0.02em] text-outline">hoặc đăng nhập bằng</span>
+                    <div class="flex-grow h-px bg-outline-variant"></div>
+                </div>
+                
+                <!-- Social Login -->
+                <div class="grid gap-unit-md flex">
+                    <button 
+                        aria-label="Đăng nhập bằng Google" 
+                        class="flex items-center justify-center gap-unit-sm py-3 border border-outline-variant rounded-lg hover:bg-surface-container transition-colors active:scale-95 w-full cursor-pointer" 
+                        type="button">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        <span class="font-semibold text-[14px] leading-[20px] tracking-[0.01em]">Google</span>
+                    </button>
+                </div>
+                
+            </form>
+        </div>
+        
+        <!-- Signup Link -->
+        <div class="mt-unit-xl text-center">
+            <p class="text-[16px] leading-[24px] text-on-surface-variant">
+                Chưa có tài khoản? 
+                <a class="text-primary font-bold hover:underline decoration-2 underline-offset-4 ml-unit-xs" href="#">Đăng ký</a>
+            </p>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="mt-auto py-unit-lg px-margin-mobile">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-unit-md font-medium text-[12px] leading-[16px] tracking-[0.02em] text-outline">
+        <p>© 2024 WeatherTrip. Mọi quyền được bảo lưu.</p>
+        <div class="flex gap-unit-lg">
+            <a class="hover:text-primary transition-colors" href="#">Điều khoản</a>
+            <a class="hover:text-primary transition-colors" href="#">Bảo mật</a>
+            <a class="hover:text-primary transition-colors" href="#">Hỗ trợ</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    function togglePassword() {
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = document.getElementById('eye-icon');
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            eyeIcon.textContent = 'visibility_off';
+        } else {
+            passwordInput.type = 'password';
+            eyeIcon.textContent = 'visibility';
+        }
+    }
+
+    // Form submission
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('loginBtn');
+        btn.disabled = true;
+        btn.classList.add('opacity-70', 'cursor-not-allowed');
+        btn.innerHTML = '<span class="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></span> Đang xử lý...';
+        
+        // Simulate login - replace with actual API call
+        setTimeout(() => {
+            btn.disabled = false;
+            btn.classList.remove('opacity-70', 'cursor-not-allowed');
+            btn.innerHTML = 'Đăng nhập <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: \'FILL\' 1, \'wght\' 400;">arrow_forward</span>';
+            
+            // Show success message (replace with redirect)
+            alert('Đăng nhập thành công!');
+        }, 2000);
+    });
+
+    // Button active state visual feedback
+    document.querySelectorAll('button').forEach(button => {
+        button.addEventListener('mousedown', () => button.classList.add('scale-95'));
+        button.addEventListener('mouseup', () => button.classList.remove('scale-95'));
+        button.addEventListener('mouseleave', () => button.classList.remove('scale-95'));
+    });
+</script>
+</body>
+</html>
