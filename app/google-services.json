@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "309603866918",
+    "project_id": "weather-trip-app",
+    "storage_bucket": "weather-trip-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:309603866918:android:46618a5d83439cae91c9e7",
+        "android_client_info": {
+          "package_name": "com.example.weather_trip"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmZH4ZB2EddBPrde2_GbCBJSg1RIXt7tI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
