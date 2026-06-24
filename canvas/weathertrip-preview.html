@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherTrip App Preview</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #3B82F6;
+            --secondary-purple: #8B5CF6;
+            --success-green: #10B981;
+            --warning-orange: #F59E0B;
+            --background: #F8FAFC;
+            --surface: #FFFFFF;
+            --text-primary: #1E293B;
+            --text-secondary: #64748B;
+            --weather-sunny-start: #FCD34D;
+            --weather-sunny-end: #F97316;
+            --weather-rainy-start: #93C5FD;
+            --weather-rainy-end: #3B82F6;
+            --weather-cloudy-start: #CBD5E1;
+            --weather-cloudy-end: #94A3B8;
+            --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+            --card-radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .preview-container {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            background: #000;
+            border-radius: 44px;
+            padding: 12px;
+            box-shadow: 
+                0 0 0 1px rgba(255,255,255,0.1),
+                0 25px 80px rgba(0,0,0,0.5),
+                0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .phone-notch {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 34px;
+            background: #000;
+            border-radius: 0 0 20px 20px;
+            z-index: 100;
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: var(--background);
+            border-radius: 34px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .status-bar {
+            height: 44px;
+            padding: 12px 24px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            position: relative;
+            z-index: 10;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .weather-banner {
+            padding: 16px 24px 32px;
+            background: linear-gradient(135deg, var(--weather-sunny-start) 0%, var(--weather-sunny-end) 100%);
+            position: relative;
+            overflow: hidden;
+            transition: background 0.8s ease;
+        }
+
+        .weather-banner.rainy {
+            background: linear-gradient(135deg, var(--weather-rainy-start) 0%, var(--weather-rainy-end) 100%);
+        }
+
+        .weather-banner.cloudy {
+            background: linear-gradient(135deg, var(--weather-cloudy-start) 0%, var(--weather-cloudy-end) 100%);
+        }
+
+        .weather-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        .weather-banner::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 50%;
+        }
+
+        .sun-icon {
+            position: absolute;
+            top: 60px;
+            right: 30px;
+            width: 80px;
+            height: 80px;
+            animation: sunPulse 3s ease-in-out infinite;
+        }
+
+        .sun-icon svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 4px 20px rgba(255,200,0,0.4));
+        }
+
+        @keyframes sunPulse {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+            50% { transform: scale(1.1) rotate(10deg); opacity: 0.9; }
+        }
+
+        .rain-cloud {
+            position: absolute;
+            top: 50px;
+            right: 25px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .weather-banner.rainy .sun-icon { opacity: 0; }
+        .weather-banner.rainy .rain-cloud { opacity: 1; }
+        .weather-banner.rainy .cloud-icon { opacity: 0; }
+
+        .cloud-icon {
+            position: absolute;
+            top: 55px;
+            right: 25px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .weather-banner.cloudy .sun-icon { opacity: 0; }
+        .weather-banner.cloudy .rain-cloud { opacity: 0; }
+        .weather-banner.cloudy .cloud-icon { opacity: 1; }
+
+        .rain-drops {
+            position: absolute;
+            top: 100px;
+            right: 20px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .weather-banner.rainy .rain-drops { opacity: 1; }
+
+        .drop {
+            position: absolute;
+            width: 2px;
+            height: 20px;
+            background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.8));
+            border-radius: 2px;
+            animation: rainDrop 1s linear infinite;
+        }
+
+        .drop:nth-child(1) { left: 0; animation-delay: 0s; }
+        .drop:nth-child(2) { left: 15px; animation-delay: 0.2s; }
+        .drop:nth-child(3) { left: 30px; animation-delay: 0.4s; }
+        .drop:nth-child(4) { left: 45px; animation-delay: 0.1s; }
+        .drop:nth-child(5) { left: 60px; animation-delay: 0.3s; }
+
+        @keyframes rainDrop {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(80px); opacity: 0; }
+        }
+
+        .location-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .location-icon {
+            width: 16px;
+            height: 16px;
+            fill: #fff;
+        }
+
+        .city-name {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .temperature-display {
+            font-family: 'Poppins', sans-serif;
+            font-size: 72px;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            position: relative;
+            z-index: 2;
+        }
+
+        .temperature-display span {
+            font-size: 36px;
+            font-weight: 500;
+            vertical-align: top;
+            margin-left: -8px;
+        }
+
+        .weather-description {
+            font-size: 18px;
+            color: rgba(255,255,255,0.95);
+            font-weight: 500;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .weather-chips {
+            display: flex;
+            gap: 10px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .weather-chip {
+            background: rgba(255,255,255,0.25);
+            backdrop-filter: blur(10px);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #fff;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .greeting-section {
+            padding: 24px;
+            padding-bottom: 8px;
+        }
+
+        .greeting-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .events-scroll {
+            padding: 0 24px;
+            overflow-y: auto;
+            max-height: calc(100vh - 480px);
+        }
+
+        .events-scroll::-webkit-scrollbar {
+            width: 0;
+        }
+
+        .event-card {
+            background: var(--surface);
+            border-radius: var(--card-radius);
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            gap: 14px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .event-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+        }
+
+        .event-card:active {
+            transform: scale(0.98);
+        }
+
+        .event-card.completed {
+            opacity: 0.7;
+        }
+
+        .event-card.completed .card-title {
+            text-decoration: line-through;
+        }
+
+        .card-accent {
+            width: 4px;
+            border-radius: 4px;
+            background: var(--primary-blue);
+            flex-shrink: 0;
+        }
+
+        .card-accent.green { background: var(--success-green); }
+        .card-accent.orange { background: var(--warning-orange); }
+        .card-accent.purple { background: var(--secondary-purple); }
+
+        .card-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .card-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .card-location {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .card-location svg {
+            width: 12px;
+            height: 12px;
+            fill: var(--text-secondary);
+        }
+
+        .completed-check {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--success-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.3s ease;
+        }
+
+        .event-card.completed .completed-check {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .completed-check svg {
+            width: 14px;
+            height: 14px;
+            fill: #fff;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 12px;
+        }
+
+        .card-weather {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .card-weather-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .date-chip {
+            background: var(--background);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .date-chip svg {
+            width: 12px;
+            height: 12px;
+            fill: var(--text-secondary);
+        }
+
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--surface);
+            padding: 12px 24px 34px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 12px;
+        }
+
+        .nav-item:hover {
+            background: var(--background);
+        }
+
+        .nav-item.active {
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--text-secondary);
+            transition: fill 0.3s ease;
+        }
+
+        .nav-item.active svg {
+            fill: var(--primary-blue);
+        }
+
+        .nav-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+        }
+
+        .nav-item.active .nav-label {
+            color: var(--primary-blue);
+        }
+
+        .add-btn {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-purple));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: -20px;
+        }
+
+        .add-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 28px rgba(59, 130, 246, 0.5);
+        }
+
+        .add-btn:active {
+            transform: scale(0.95);
+        }
+
+        .add-btn svg {
+            width: 28px;
+            height: 28px;
+            fill: #fff;
+        }
+
+        .controls-panel {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 24px;
+            width: 320px;
+        }
+
+        .controls-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .control-section {
+            margin-bottom: 24px;
+        }
+
+        .control-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 12px;
+        }
+
+        .weather-toggles {
+            display: flex;
+            gap: 10px;
+        }
+
+        .weather-toggle {
+            flex: 1;
+            padding: 14px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .weather-toggle:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        .weather-toggle.active {
+            border-color: var(--primary-blue);
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        .weather-toggle svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        .card-demo {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .demo-card-preview {
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .demo-card-preview:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        .demo-card-preview .accent {
+            width: 4px;
+            height: 32px;
+            border-radius: 2px;
+        }
+
+        .color-swatches {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .swatch {
+            aspect-ratio: 1;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .swatch:hover {
+            transform: scale(1.1);
+        }
+
+        .swatch.active::after {
+            content: '✓';
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.3);
+            color: #fff;
+            font-size: 16px;
+        }
+
+        .interaction-hint {
+            background: rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        .hint-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .hint-text {
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.6;
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .event-card {
+            animation: cardAppear 0.4s ease forwards;
+        }
+
+        .event-card:nth-child(1) { animation-delay: 0.1s; }
+        .event-card:nth-child(2) { animation-delay: 0.2s; }
+        .event-card:nth-child(3) { animation-delay: 0.3s; }
+    </style>
+</head>
+<body>
+    <div class="preview-container">
+        <div class="phone-frame">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+                <div class="status-bar">
+                    <span>9:41</span>
+                    <div class="status-icons">
+                        <svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 2.5C5.5 2.5 3.5 4.5 3.5 7C3.5 7.8 3.7 8.5 4 9.2C3.1 9.1 2.3 8.8 1.7 8.3C1 7.8 0.5 7 0.5 6C0.5 4.3 2 3 4 3C4.6 3 5.2 3.1 5.7 3.4C6.6 1.8 8.2 0.5 10 0.5C12.2 0.5 14 2.3 14 4.5C14 4.6 14 4.7 14 4.8L8 2.5Z" fill="currentColor"/></svg>
+                        <svg width="16" height="12" viewBox="0 0 16 12"><path d="M1 10.5V6.5L4 3.5V6.5L1 10.5Z" fill="currentColor"/><path d="M5 9.5V3.5L8 0.5V6.5L5 9.5Z" fill="currentColor"/><path d="M9 8.5V2.5L12 -0.5V5.5L9 8.5Z" fill="currentColor"/></svg>
+                    </div>
+                </div>
+
+                <div class="weather-banner" id="weatherBanner">
+                    <div class="sun-icon">
+                        <svg viewBox="0 0 80 80" fill="none">
+                            <circle cx="40" cy="40" r="20" fill="#FFD93D"/>
+                            <g stroke="#FFD93D" stroke-width="3" stroke-linecap="round">
+                                <line x1="40" y1="5" x2="40" y2="14"/>
+                                <line x1="40" y1="66" x2="40" y2="75"/>
+                                <line x1="5" y1="40" x2="14" y2="40"/>
+                                <line x1="66" y1="40" x2="75" y2="40"/>
+                                <line x1="15" y1="15" x2="22" y2="22"/>
+                                <line x1="58" y1="58" x2="65" y2="65"/>
+                                <line x1="15" y1="65" x2="22" y2="58"/>
+                                <line x1="58" y1="22" x2="65" y2="15"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="rain-cloud">
+                        <svg width="100" height="70" viewBox="0 0 100 70" fill="none">
+                            <path d="M80 35C80 22 69 12 55 12C50 12 45 14 41 17C38 10 31 5 23 5C10 5 0 18 0 35C0 52 13 65 30 65H80C91 65 100 56 100 45C100 39 95 34 88 33C84 32 82 30 80 35Z" fill="white" fill-opacity="0.9"/>
+                        </svg>
+                    </div>
+                    <div class="cloud-icon">
+                        <svg width="90" height="60" viewBox="0 0 100 70" fill="none">
+                            <path d="M80 35C80 22 69 12 55 12C50 12 45 14 41 17C38 10 31 5 23 5C10 5 0 18 0 35C0 52 13 65 30 65H80C91 65 100 56 100 45C100 39 95 34 88 33C84 32 82 30 80 35Z" fill="white" fill-opacity="0.8"/>
+                        </svg>
+                    </div>
+                    <div class="rain-drops">
+                        <div class="drop"></div>
+                        <div class="drop"></div>
+                        <div class="drop"></div>
+                        <div class="drop"></div>
+                        <div class="drop"></div>
+                    </div>
+
+                    <div class="location-row">
+                        <svg class="location-icon" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                        <span class="city-name">San Francisco</span>
+                    </div>
+                    <div class="temperature-display" id="temperature">28<span>°</span></div>
+                    <div class="weather-description" id="weatherDesc">Sunny</div>
+                    <div class="weather-chips">
+                        <div class="weather-chip">
+                            <span>Feels like</span>
+                            <strong id="feelsLike">26°</strong>
+                        </div>
+                        <div class="weather-chip">
+                            <span>Humidity</span>
+                            <strong id="humidity">65%</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="greeting-section">
+                    <div class="greeting-text" id="greeting">Good Morning!</div>
+                </div>
+
+                <div class="events-scroll">
+                    <div class="section-title">Upcoming Trips</div>
+
+                    <div class="event-card" id="card1" onclick="toggleComplete(this)">
+                        <div class="card-accent orange"></div>
+                        <div class="card-content">
+                            <div class="card-header">
+                                <div>
+                                    <div class="card-title">Beach Day</div>
+                                    <div class="card-location">
+                                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                                        Santa Cruz Beach
+                                    </div>
+                                </div>
+                                <div class="completed-check">
+                                    <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-weather">
+                                    <svg class="card-weather-icon" viewBox="0 0 24 24" fill="#F59E0B"><circle cx="12" cy="12" r="5"/><g stroke="#F59E0B" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></g></svg>
+                                    32°C Sunny
+                                </div>
+                                <div class="date-chip">
+                                    <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM9 10H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/></svg>
+                                    May 25
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="event-card" id="card2" onclick="toggleComplete(this)">
+                        <div class="card-accent green"></div>
+                        <div class="card-content">
+                            <div class="card-header">
+                                <div>
+                                    <div class="card-title">Mountain Hike</div>
+                                    <div class="card-location">
+                                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                                        Yosemite Valley
+                                    </div>
+                                </div>
+                                <div class="completed-check">
+                                    <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-weather">
+                                    <svg class="card-weather-icon" viewBox="0 0 24 24" fill="#3B82F6"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
+                                    18°C Cloudy
+                                </div>
+                                <div class="date-chip">
+                                    <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM9 10H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/></svg>
+                                    Jun 2
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="event-card" id="card3" onclick="toggleComplete(this)">
+                        <div class="card-accent purple"></div>
+                        <div class="card-content">
+                            <div class="card-header">
+                                <div>
+                                    <div class="card-title">Wine Tasting</div>
+                                    <div class="card-location">
+                                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                                        Napa Valley
+                                    </div>
+                                </div>
+                                <div class="completed-check">
+                                    <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-weather">
+                                    <svg class="card-weather-icon" viewBox="0 0 24 24" fill="#93C5FD"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
+                                    22°C Partly Cloudy
+                                </div>
+                                <div class="date-chip">
+                                    <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM9 10H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/></svg>
+                                    Jun 10
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bottom-nav">
+                    <div class="nav-item active" onclick="setActiveNav(this)">
+                        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                        <span class="nav-label">Home</span>
+                    </div>
+                    <div class="add-btn" onclick="showToast('Create new trip!')">
+                        <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                    </div>
+                    <div class="nav-item" onclick="setActiveNav(this)">
+                        <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                        <span class="nav-label">Settings</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls-panel">
+            <div class="controls-title">WeatherTrip Preview Controls</div>
+
+            <div class="control-section">
+                <div class="control-label">Weather Mode</div>
+                <div class="weather-toggles">
+                    <button class="weather-toggle active" id="sunnyBtn" onclick="setWeather('sunny')">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></g></svg>
+                        Sunny
+                    </button>
+                    <button class="weather-toggle" id="rainyBtn" onclick="setWeather('rainy')">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C9.11 2 6.6 3.64 5.35 6.04 4.17 6.37 3.14 7.31 2.64 8.5 1.52 10.7 2.61 13.26 5 14.24V21H19V14.24C21.39 13.26 22.48 10.7 21.36 8.5 20.86 7.31 19.83 6.37 18.65 6.04 16.4 3.64 13.89 2 11 2h1zm5 14h-2v2H9v-2H7v-2h2V12H9v2h2v2h2z"/></svg>
+                        Rainy
+                    </button>
+                    <button class="weather-toggle" id="cloudyBtn" onclick="setWeather('cloudy')">
+                        <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
+                        Cloudy
+                    </button>
+                </div>
+            </div>
+
+            <div class="control-section">
+                <div class="control-label">Accent Colors</div>
+                <div class="color-swatches">
+                    <div class="swatch active" style="background: #3B82F6;" onclick="setAccentColor('#3B82F6', this)"></div>
+                    <div class="swatch" style="background: #8B5CF6;" onclick="setAccentColor('#8B5CF6', this)"></div>
+                    <div class="swatch" style="background: #10B981;" onclick="setAccentColor('#10B981', this)"></div>
+                    <div class="swatch" style="background: #F59E0B;" onclick="setAccentColor('#F59E0B', this)"></div>
+                </div>
+            </div>
+
+            <div class="control-section">
+                <div class="control-label">Demo Interactions</div>
+                <div class="card-demo">
+                    <div class="demo-card-preview" onclick="toggleComplete(document.getElementById('card1'))">
+                        <span>Click event cards to complete</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                    </div>
+                    <div class="demo-card-preview" onclick="setWeather(document.querySelector('.weather-toggle.active').id.replace('Btn',''))">
+                        <span>Change weather mode</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="interaction-hint">
+                <div class="hint-title">Interactive Elements</div>
+                <div class="hint-text">
+                    • Click event cards to toggle completion<br>
+                    • Use weather toggles to change theme<br>
+                    • Bottom nav items are clickable<br>
+                    • Cards have hover/tap animations
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const weatherData = {
+            sunny: {
+                temp: 28,
+                feelsLike: 26,
+                humidity: 65,
+                desc: 'Sunny',
+                greeting: 'Good Morning!'
+            },
+            rainy: {
+                temp: 18,
+                feelsLike: 15,
+                humidity: 89,
+                desc: 'Light Rain',
+                greeting: 'Stay Dry Today!'
+            },
+            cloudy: {
+                temp: 22,
+                feelsLike: 20,
+                humidity: 72,
+                desc: 'Partly Cloudy',
+                greeting: 'Have a Great Day!'
+            }
+        };
+
+        function setWeather(type) {
+            const banner = document.getElementById('weatherBanner');
+            const data = weatherData[type];
+
+            document.querySelectorAll('.weather-toggle').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(type + 'Btn').classList.add('active');
+
+            banner.className = 'weather-banner ' + type;
+
+            document.getElementById('temperature').innerHTML = data.temp + '<span>°</span>';
+            document.getElementById('weatherDesc').textContent = data.desc;
+            document.getElementById('feelsLike').textContent = data.feelsLike + '°';
+            document.getElementById('humidity').textContent = data.humidity + '%';
+            document.getElementById('greeting').textContent = data.greeting;
+        }
+
+        function toggleComplete(card) {
+            card.classList.toggle('completed');
+        }
+
+        function setActiveNav(item) {
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            item.classList.add('active');
+        }
+
+        function setAccentColor(color, swatch) {
+            document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+            swatch.classList.add('active');
+
+            const cards = document.querySelectorAll('.card-accent:not(.green):not(.orange):not(.purple)');
+            cards.forEach(card => {
+                card.style.background = color;
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 100px;
+                left: 50%;
+                transform: translateX(-50%) translateY(20px);
+                background: #1E293B;
+                color: #fff;
+                padding: 12px 24px;
+                border-radius: 12px;
+                font-size: 14px;
+                font-weight: 500;
+                opacity: 0;
+                transition: all 0.3s ease;
+                z-index: 1000;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            requestAnimationFrame(() => {
+                toast.style.opacity = '1';
+                toast.style.transform = 'translateX(-50%) translateY(0)';
+            });
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(-50%) translateY(20px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
+
+        setInterval(() => {
+            const hour = new Date().getHours();
+            let greeting = 'Good Morning!';
+            if (hour >= 12 && hour < 17) greeting = 'Good Afternoon!';
+            else if (hour >= 17) greeting = 'Good Evening!';
+            document.getElementById('greeting').textContent = greeting;
+        }, 60000);
+    </script>
+</body>
+</html>

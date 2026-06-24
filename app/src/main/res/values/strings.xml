@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">mobile_project</string>
+    <string name="app_name">WeatherTrip</string>
+    <string name="google_client_id">434878286741-ebdp08m67khulrs5upvcgu92nsm2naur.apps.googleusercontent.com</string>
 </resources>
